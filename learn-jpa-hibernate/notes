@@ -1,0 +1,125 @@
+
+Getting Started with JPA and Hibernate 
+---------------------------------------
+- Build a Simple JPA App using Modern Spring Boot Approach
+
+- Get Hands-on with JPA, Hibernate and Spring Boot
+	- world befor JPA-JDBC, Spring JDBC
+	- Why JPA ? Why Hibernate ? ( JPA vs Hibernate )
+	- Why spring boot and spring boot data jpa ?
+
+Learning JPA and Hibernate - Approach
+---------------------------------------
+1. Create a Spring boot project with H2
+2. create course table
+3. use spring jdbc to play with course table
+4. use jpa and hibernate to play with course table
+5. use spring data jpa to play with course table
+
+printing java version in code :
+	System.out.println(System.getProperty("java.version"));
+
+enable h2 database console :
+--------------------------------
+spring.h2.console.enabled=true
+[ in application.properties ]
+
+default h2 console url :
+http://localhost:8080/h2-console
+
+<dependency>
+	<groupId>com.h2database</groupId>
+	<artifactId>h2</artifactId>
+	<!--<scope>runtime</scope> -->
+</dependency>
+
+Note - scope needs to be commented in order to see h2 console 
+
+Added connection conn0: url=jdbc:h2:mem:1c383ab5-0f42-4903-b5d6-0e7351fe47fe user=SA
+
+static url config in application.properties
+spring.datasource.url=jdbc:h2:mem:testdb
+
+JDBC to Spring JDBC to JPA to Spring Data JPA
+---------------------------
+- JDBC 
+	- write a lot of SQL queries
+	- And write a lot of java Code
+
+- Spring JDBC
+	- - write a lot of SQL queries
+	- but write less java Code
+
+- JPA
+	- do not worry about queries
+	- Just Map Entities to Tables
+- Spring Data JPA
+	- Let's make JPA even more simple
+	- i will take case of everything
+
+
+JDBC sample code : 
+public void deleteTodo(int id){
+	PreparedStatement st = null;
+	try {
+	 st = db.conn.preparedStatement("delete form todo where id = ?");
+	 st.setInt(1, id);
+	 st.execute();
+	}catch(SQLException e){
+		logger.fatal("Query Failed : ", e);
+	} finally {
+		if(st != null){
+		 try {
+		 	st.close();
+		 }atch(SQLException e){
+				logger.fatal("clossing connection failed : ", e);
+			} 
+		}
+	}
+}
+
+Spring JDBC sample code : 
+public void deleteTodo(int id){
+	jdbcTemplate.update("delete form todo where id = ?", id);
+}
+
+JPA :
+
+	@PersistenceContext // this is more specific instead of @Autowired
+	private EntityManager entityManager;
+
+	
+	public void insert(Course course) {
+		entityManager.merge(course);
+	}
+	
+	public Course findById(long id) {
+		return entityManager.find(Course.class, id);
+	}
+	public void deleteById(long id) {
+		 Course course  = entityManager.find(Course.class, id);
+		 entityManager.remove(course);
+	}
+
+spring Data JPA : 
+public interface CourseSpringDataJpaRepository extends JpaRepository<Course, Long> {
+
+	List<Course> findByAuthor(String author);
+	List<Course> findByName(String name);
+}
+
+
+Hibernate VS JPA
+-----------------------
+- JPA defines the specification. It is an API
+ - How do you define entities ?
+ - How do you map attributes ?
+ - Who manages the entities ?
+
+- Hibernate is one of the popular implementations of JPA
+
+- Using Hibernate directly would result in a lock in to hibernate
+	- there are other JPA implementations ( Toplink for example )
+	
+reference :	
+https://github.com/in28minutes/spring-microservices-v2/blob/main/02.restful-web-services/01-step-by-step-changes/v2.md#step-12
