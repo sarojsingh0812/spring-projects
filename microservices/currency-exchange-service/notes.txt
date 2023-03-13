@@ -1,0 +1,12 @@
+
+
+adding the dependencies will add register the application to eureka server on default url
+<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
+but adding property below is best solution
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka
+url is eureka server url
+

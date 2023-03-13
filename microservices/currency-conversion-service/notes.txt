@@ -1,0 +1,52 @@
+URL
+http://localhost:8100/currency-conversion/from/USD/to/INR/quantity/10
+Response Structure
+{
+  "id": 10001,
+  "from": "USD",
+  "to": "INR",
+  "conversionMultiple": 65.00,
+  "quantity": 10,
+  "totalCalculatedAmount": 650.00,
+  "environment": "8000 instance-id"
+}
+
+spring feign dependencies :
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+
+@EnableFeignClients - in base application class
+
+//@FeignClient(name="currency-exchange", url="localhost:8000")
+@FeignClient(name="currency-exchange")
+public interface CurrencyExchangeProxy {
+
+	@GetMapping("/currency-exchange/from/{from}/to/{to}")
+	public CurrencyConversion retrieveExchangeValue(
+			@PathVariable String from,
+			@PathVariable String to);
+
+}
+
+@FeignClient(name="currency-exchange", url="localhost:8000")
+ - name = name of application that we are calling
+ - url = base url of that application
+
+@FeignClient(name="currency-exchange")
+    - this will load balance b/w all the instances of currency-exchange by Feign
+
+earlier version of spring feign used ribbon as load balancer, but now started using spring cloud load balancer
+
+
+adding the dependencies will add register the application to eureka server on default url
+<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
+but adding property below is best solution
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka
+url is eureka server url
+

@@ -1,0 +1,21 @@
+
+to avoid eureka server to register to itself :
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+----------------------------------------
+@EnableEurekaServer - to configure the application as eureka server
+sample code :
+@EnableEurekaServer
+@SpringBootApplication
+public class NamingServerApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(NamingServerApplication.class, args);
+	}
+}
+----------------------------------------
+default port :
+http://localhost:8761/
+
+----------------------------------------
+reference :
+https://github.com/in28minutes/spring-microservices-v3/blob/main/03.microservices/01-step-by-step-changes/readme.md#eureka---step-19-to-21

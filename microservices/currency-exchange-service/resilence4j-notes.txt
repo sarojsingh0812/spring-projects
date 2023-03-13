@@ -1,0 +1,45 @@
+
+dependencies :
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-spring-boot2</artifactId>
+		</dependency>
+
+---------------
+@Retry(name="default")
+   - retry will happen 3 times
+----------------
+@Retry(name="sample-api")
+resilience4j.retry.instances.sample-api.maxRetryAttempts=5
+ - custom retry attempts = 5
+
+resilience4j.retry.instances.sample-api.maxAttempts=5 #NEW
+#resilience4j.retry.instances.sample-api.maxRetryAttempts=5 #OLD
+
+----------------
+resilience4j.retry.instances.sample-api.waitDuration=1s
+ - wait for 1 sec before calling next time
+
+----------------
+resilience4j.retry.instances.sample-api.enableExponentialBackoff=true
+  - wait for little more time than the previous for next attempt
+----------------
+https://resilience4j.readme.io/docs/circuitbreaker
+ @CircuitBreaker(name="default", fallbackMethod = "hardcodedResponse")
+---------------
+ @RateLimiter(name="default")
+ - 10s => 10000 calls to the api
+ - configuration for only one api. so for all the api we need to define.
+resilience4j.ratelimiter.instances.default.limitForPeriod=2  // no of request
+resilience4j.ratelimiter.instances.default.limitRefreshPeriod=2s // time for limit
+--------------------------
+@Bulkhead(name="default")
+ - no. of concurrent calls
+resilience4j.bulkhead.instances.default.maxConcurrentCalls=10
+
+@Bulkhead(name="sample-api")
+resilience4j.bulkhead.instances.sample-api.maxConcurrentCalls=10
